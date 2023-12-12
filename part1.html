@@ -38,100 +38,100 @@
                 </form>
             </rating-widget>
         </main>
-    </body>
-    <script>
-        function ready() {
-            const ratingWg = document.querySelector('form');
-
-            // Max star rating
-            const maxRating = document.getElementById("rating").getAttribute("max");
-
-            // Dynamically hid the old elements
-            document.querySelector('label').hidden = true;
-            document.querySelector('#rating').hidden = true;
-            document.querySelector('#rating').required = false;
-            document.querySelector('button').hidden = true;
-
-            // Dynamically adding in the stars
-            for (starVal = 1; starVal <= maxRating; starVal++) {
-                const star = document.createElement("input");
-                star.type = "submit"; // Clicking on the star will submit the form
-                star.value = "☆";
-                star.className = "ratingStar";
-
-                // Storing the star's value into placeholder attribute
-                // This is honestly quite stupid
-                // But it works for now
-                // TODO: comes up a better solution
-                star.placeholder = starVal;
-
-                // Submit and fetch form's repsonse
-                star.addEventListener("click", () => {
-                    document.querySelector('#rating').value = star.placeholder;
-                    document.querySelector('input[name="sentBy"]').value = "JS";
-                    event.preventDefault();
-                    const payload = new FormData(ratingWg);
-
-                    fetch("http://httpbin.org/post", {
-                        method: "POST",
-                        body: payload,
-                        headers: {
-                            'X-Sent-By': 'Javascript',
+        <script>
+            function ready() {
+                const ratingWg = document.querySelector('form');
+    
+                // Max star rating
+                const maxRating = document.getElementById("rating").getAttribute("max");
+    
+                // Dynamically hid the old elements
+                document.querySelector('label').hidden = true;
+                document.querySelector('#rating').hidden = true;
+                document.querySelector('#rating').required = false;
+                document.querySelector('button').hidden = true;
+    
+                // Dynamically adding in the stars
+                for (starVal = 1; starVal <= maxRating; starVal++) {
+                    const star = document.createElement("input");
+                    star.type = "submit"; // Clicking on the star will submit the form
+                    star.value = "☆";
+                    star.className = "ratingStar";
+    
+                    // Storing the star's value into placeholder attribute
+                    // This is honestly quite stupid
+                    // But it works for now
+                    // TODO: comes up a better solution
+                    star.placeholder = starVal;
+    
+                    // Submit and fetch form's repsonse
+                    star.addEventListener("click", () => {
+                        document.querySelector('#rating').value = star.placeholder;
+                        document.querySelector('input[name="sentBy"]').value = "JS";
+                        event.preventDefault();
+                        const payload = new FormData(ratingWg);
+    
+                        fetch("http://httpbin.org/post", {
+                            method: "POST",
+                            body: payload,
+                            headers: {
+                                'X-Sent-By': 'Javascript',
+                            }
+                        }).then(function(response){
+                            return response.json();
+                        }).then(function(data) {
+                            console.log(data);
+                        }).catch(function(err){
+                            alert('Error caught!')
+                        });
+    
+                        const starArray = document.querySelectorAll('.ratingStar');
+    
+                        for (currStar = 0; currStar < maxRating; currStar++) {
+                            starArray[currStar].hidden = true;
                         }
-                    }).then(function(response){
-                        return response.json();
-                    }).then(function(data) {
-                        console.log(data);
-                    }).catch(function(err){
-                        alert('Error caught!')
+                        
+                        const msg = document.createElement('p');
+                        msg.className = "responseMSG";
+                        
+                        if (star.placeholder/maxRating >= 0.8) {
+                            msg.innerHTML = "Thanks for " + star.placeholder + " stars rating!";
+                        }
+                        else {
+                            msg.innerHTML = "Thank you for your feedback of " + star.placeholder + " star(s). We will try to do better!";
+                        }
+    
+                        ratingWg.appendChild(msg);
+                    })
+                    
+                    // Dynamically change the previous stars and this current star
+                    // to FILLED when mouse hovering
+                    star.addEventListener('mouseover', () => {
+                        // console.log('User selecting ' + input.placeholder + ' star(s)');
+                        const starArray = document.querySelectorAll('.ratingStar');
+                        
+                        for (currStar = 0; currStar < star.placeholder; currStar++) {
+                            starArray[currStar].value = "★";
+                        }
                     });
-
-                    const starArray = document.querySelectorAll('.ratingStar');
-
-                    for (currStar = 0; currStar < maxRating; currStar++) {
-                        starArray[currStar].hidden = true;
-                    }
-                    
-                    const msg = document.createElement('p');
-                    msg.className = "responseMSG";
-                    
-                    if (star.placeholder/maxRating >= 0.8) {
-                        msg.innerHTML = "Thanks for " + star.placeholder + " stars rating!";
-                    }
-                    else {
-                        msg.innerHTML = "Thank you for your feedback of " + star.placeholder + " star(s). We will try to do better!";
-                    }
-
-                    ratingWg.appendChild(msg);
-                })
-                
-                // Dynamically change the previous stars and this current star
-                // to FILLED when mouse hovering
-                star.addEventListener('mouseover', () => {
-                    // console.log('User selecting ' + input.placeholder + ' star(s)');
-                    const starArray = document.querySelectorAll('.ratingStar');
-                    
-                    for (currStar = 0; currStar < star.placeholder; currStar++) {
-                        starArray[currStar].value = "★";
-                    }
-                });
-
-                // Dynamically change the previous stars and this current star
-                // back to BLANK when mouse stops hovering
-                star.addEventListener('mouseleave', () => {
-                    const starArray = document.querySelectorAll('.ratingStar');
-                    
-                    for (currStar = 0; currStar < star.placeholder; currStar++) {
-                        starArray[currStar].value = "☆";
-                    }
-                });
-
-                // Once configured, add this new star to our input
-                ratingWg.appendChild(star);
+    
+                    // Dynamically change the previous stars and this current star
+                    // back to BLANK when mouse stops hovering
+                    star.addEventListener('mouseleave', () => {
+                        const starArray = document.querySelectorAll('.ratingStar');
+                        
+                        for (currStar = 0; currStar < star.placeholder; currStar++) {
+                            starArray[currStar].value = "☆";
+                        }
+                    });
+    
+                    // Once configured, add this new star to our input
+                    ratingWg.appendChild(star);
+                }
             }
-        }
-
-        /* Wait until html load to start firing javascript */
-        document.addEventListener("DOMContentLoaded", ready());
-    </script>
+    
+            /* Wait until html load to start firing javascript */
+            document.addEventListener("DOMContentLoaded", ready());
+        </script>
+    </body>
 </html>
