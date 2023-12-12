@@ -5,6 +5,12 @@
         <meta name="description" content="Part 2's Widget">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Part 2's Weather Widget</title>
+        <style>
+            .stylizedText {
+                font-size: 1.5em;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <main>
@@ -56,12 +62,83 @@
                     const weatherDescription = document.createElement('p');
                     const windDescription = document.createElement('p');
                     const humidityDescription = document.createElement('p');
-    
+                    const weatherIcon = new Image();
+
+                    // Logic for determining weather's icon 
+                    // https://www.weather.gov/forecast-icons
+                    // If it's day
+                    if (weatherInfo.isDaytime) {
+                        if (forecast.includes("Fair") || forecast.includes("Clear")) {
+                            weatherIcon.src = "Icons/Fair_Day.png";
+                        }
+                        else if (forecast.includes("Cloudy")) {
+                            weatherIcon.src = "Icons/Cloud_Day.png";
+                        } 
+                        else if (forecast.includes("Overcast")) {
+                            weatherIcon.src = "Icons/Overcast_Day.png";
+                        } 
+                        else if (forecast.includes("Rain")) {
+                            weatherIcon.src = "Icons/Rain_Day.png";
+                        } 
+                        else if (forecast.includes("Showers")) {
+                            weatherIcon.src = "Icons/Showers_Day.png";
+                        } 
+                        else if (forecast.includes("Snow")) {
+                            weatherIcon.src = "Icons/Snow_Day.png";
+                        } 
+                        else if (forecast.includes("Thunderstorm")) {
+                            weatherIcon.src = "Icons/Thunderstorm_Day.png";
+                        } 
+                        else if (forecast.includes("Hurricane")) {
+                            weatherIcon.src = "Hurrican.png";
+                        } 
+                        else {
+                            weatherIcon.src = "unkwown.png";
+                        }
+                    }
+                    // else it's night
+                    else {
+                        if (forecast.includes("Fair") || forecast.includes("Clear")) {
+                            weatherIcon.src = "Icons/Fair_Night.png";
+                        }
+                        else if (forecast.includes("Cloudy")) {
+                            weatherIcon.src = "Icons/Cloud_Night.png";
+                        } 
+                        else if (forecast.includes("Overcast")) {
+                            weatherIcon.src = "Icons/Overcast_Night.png";
+                        } 
+                        else if (forecast.includes("Rain")) {
+                            weatherIcon.src = "Icons/Rain_Night.png";
+                        } 
+                        else if (forecast.includes("Showers")) {
+                            weatherIcon.src = "Icons/Showers_Night.png";
+                        } 
+                        else if (forecast.includes("Snow")) {
+                            weatherIcon.src = "Icons/Snow_Night.png";
+                        } 
+                        else if (forecast.includes("Thunderstorm")) {
+                            weatherIcon.src = "Icons/Thunderstorm_Night.png";
+                        } 
+                        else if (forecast.includes("Hurricane")) {
+                            weatherIcon.src = "Hurrican.png";
+                        } 
+                        else {
+                            weatherIcon.src = "unkwown.png";
+                        }
+                    }
+
+                    weatherIcon.setAttribute('width', '10%');
+                    weatherIcon.setAttribute('height', 'auto');
+                    
                     weatherDescription.innerHTML = forecast + ' ' + temp + '°' + tempUnit;
+                    weatherDescription.className = "stylizedText";
                     windDescription.innerHTML = "Wind is blowing " + windDir + " at " + windSpeed;
+                    windDescription.className = "stylizedText";
                     humidityDescription.innerHTML = "Humidity level is currently at " + humidity + "%";
-    
+                    humidityDescription.className = "stylizedText";
+
                     // Appending all new info to body
+                    document.body.appendChild(weatherIcon);
                     document.body.appendChild(weatherDescription);
                     document.body.appendChild(windDescription);
                     document.body.appendChild(humidityDescription);
