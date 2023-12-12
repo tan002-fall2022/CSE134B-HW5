@@ -26,16 +26,18 @@
         </style>
     </head>
     <body>
-        <h1> Rating Widget </h1>
-        <rating-widget>
-            <form action="http://httpbin.org/post" method="POST">
-                <label for="rating">How satisfied are you?</label>
-                <input type="hidden" name="question" value="How satisfied are you?">
-                <input type="hidden" name="sentBy" value="HTML">
-                <input type="number" id="rating" name="rating" min="1" max="5" value="1" required>
-                <button type="submit">Submit</button>
-            </form>
-        </rating-widget>
+        <main>
+            <h1> Rating Widget </h1>
+            <rating-widget>
+                <form action="http://httpbin.org/post" method="POST">
+                    <label for="rating">How satisfied are you?</label>
+                    <input type="hidden" name="question" value="How satisfied are you?">
+                    <input type="hidden" name="sentBy" value="HTML">
+                    <input type="number" id="rating" name="rating" min="1" max="5" value="1" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </rating-widget>
+        </main>
     </body>
     <script>
         function ready() {
@@ -63,8 +65,7 @@
                 // TODO: comes up a better solution
                 star.placeholder = starVal;
 
-                // When submit, change the value of the original
-                // submit field to this current star's value
+                // Submit and fetch form's repsonse
                 star.addEventListener("click", () => {
                     document.querySelector('#rating').value = star.placeholder;
                     document.querySelector('input[name="sentBy"]').value = "JS";
@@ -130,7 +131,7 @@
             }
         }
 
-        /* Wait until page load to start firing javascript */
+        /* Wait until html load to start firing javascript */
         document.addEventListener("DOMContentLoaded", ready());
     </script>
 </html>
