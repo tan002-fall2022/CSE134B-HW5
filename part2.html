@@ -11,68 +11,68 @@
             <h1> Current Weather </h1>
             <h2> Current Weather Conditions Unavailable </h2>
         </main>
+        <script>
+            async function ready() {
+                // San Diego's Latitude and Longtitude
+                const Lat = 32.715736;
+                const Long = -117.161087;
+                let foreCastURL;
+    
+                // 1st stage: Fetching the grid points based on San Diego's lat and long
+                fetch("https://api.weather.gov/points/" + Lat + "," + Long, {
+                    method: "GET",
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    console.log("Grid Points Response");
+                    console.log(data);
+                    foreCastURL = data.properties.forecast;
+                    
+                    // 2nd stage: Fetch San Diego's current time's weather info
+                    return fetch(foreCastURL, {method: "GET"});
+                })
+                // Fetching San Diego's weather data
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    console.log("Weather Info's Response");
+                    console.log(data);
+    
+                    /* Populating the page with weather info */
+                    // Remove the "weather unavailable" message
+                    document.querySelector('h2').hidden = true;
+    
+                    // Grabbing current weather's info
+                    const weatherInfo = data.properties.periods[0];
+                    const forecast = weatherInfo.shortForecast;
+                    const temp = weatherInfo.temperature;
+                    const tempUnit = weatherInfo.temperatureUnit;
+                    const windDir = weatherInfo.windDirection;
+                    const windSpeed = weatherInfo.windSpeed;
+                    const humidity = weatherInfo.relativeHumidity.value;
+                    // console.log(weatherInfo);
+    
+                    // data.properties.periods[0] corresponds to the current timeframe's
+                    // weather info
+                    const weatherDescription = document.createElement('p');
+                    const windDescription = document.createElement('p');
+                    const humidityDescription = document.createElement('p');
+    
+                    weatherDescription.innerHTML = forecast + ' ' + temp + '°' + tempUnit;
+                    windDescription.innerHTML = "Wind is blowing " + windDir + " at " + windSpeed;
+                    humidityDescription.innerHTML = "Humidity level is currently at " + humidity + "%";
+    
+                    // Appending all new info to body
+                    document.body.appendChild(weatherDescription);
+                    document.body.appendChild(windDescription);
+                    document.body.appendChild(humidityDescription);
+                })
+                .catch(function(err){
+                    alert(err);
+                });
+            } 
+    
+            /* Wait until html load to start firing javascript */
+            document.addEventListener("DOMContentLoaded", ready());
+        </script>
     </body>
-    <script>
-        async function ready() {
-            // San Diego's Latitude and Longtitude
-            const Lat = 32.715736;
-            const Long = -117.161087;
-            let foreCastURL;
-
-            // 1st stage: Fetching the grid points based on San Diego's lat and long
-            fetch("https://api.weather.gov/points/" + Lat + "," + Long, {
-                method: "GET",
-            })
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                console.log("Grid Points Response");
-                console.log(data);
-                foreCastURL = data.properties.forecast;
-                
-                // 2nd stage: Fetch San Diego's current time's weather info
-                return fetch(foreCastURL, {method: "GET"});
-            })
-            // Fetching San Diego's weather data
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                console.log("Weather Info's Response");
-                console.log(data);
-
-                /* Populating the page with weather info */
-                // Remove the "weather unavailable" message
-                document.querySelector('h2').hidden = true;
-
-                // Grabbing current weather's info
-                const weatherInfo = data.properties.periods[0];
-                const forecast = weatherInfo.shortForecast;
-                const temp = weatherInfo.temperature;
-                const tempUnit = weatherInfo.temperatureUnit;
-                const windDir = weatherInfo.windDirection;
-                const windSpeed = weatherInfo.windSpeed;
-                const humidity = weatherInfo.relativeHumidity.value;
-                // console.log(weatherInfo);
-
-                // data.properties.periods[0] corresponds to the current timeframe's
-                // weather info
-                const weatherDescription = document.createElement('p');
-                const windDescription = document.createElement('p');
-                const humidityDescription = document.createElement('p');
-
-                weatherDescription.innerHTML = forecast + ' ' + temp + '°' + tempUnit;
-                windDescription.innerHTML = "Wind is blowing " + windDir + " at " + windSpeed;
-                humidityDescription.innerHTML = "Humidity level is currently at " + humidity + "%";
-
-                // Appending all new info to body
-                document.body.appendChild(weatherDescription);
-                document.body.appendChild(windDescription);
-                document.body.appendChild(humidityDescription);
-            })
-            .catch(function(err){
-                alert(err);
-            });
-        } 
-
-        /* Wait until html load to start firing javascript */
-        document.addEventListener("DOMContentLoaded", ready());
-    </script>
 </html>
